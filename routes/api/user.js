@@ -5,7 +5,7 @@ const userController=require("../../controllers/userController")
 
 Router.get("/:id",userController.get);  //get 
 Router.delete("/:id",userController.remove); //
-Router.post("/:id",userController.edit); //edit
+Router.post("/edit-account",passportJwt.authenticate("jwt",{session:false}),userController.edit); //edit
 Router.post("/",userController.create);  //create
 Router.get("/",passportJwt.authenticate("jwt",{session:false}),userController.getCurrent); //getCurrent User
 

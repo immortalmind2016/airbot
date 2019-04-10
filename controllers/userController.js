@@ -1,9 +1,22 @@
 
 var jwt = require('jsonwebtoken');
-
+const  db=require("../helpers/databaseFunctions");
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('airbot', 'root', '', {
+  host: 'localhost',
+  dialect:"mysql"/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+});
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 const create=(req,res,err)=>{
     let accountData=req.body.data
-    console.log(accountData)
+
   
     jwt.sign({payload:accountData},"secret",{ expiresIn: '365d' // expires in 365 days
 },(err,token)=>{
@@ -14,12 +27,22 @@ const create=(req,res,err)=>{
 });
 }
 const getCurrent=(req,res,err)=>{
-    res.json({success:true,user:req.user})
+    db.select("*","users","email="+req.user.email).then(data=>{
+   res.json({success:true,user:data})
+    }).catch((error)=>{
+            console.log(error)
+    })
+ 
 }
 
 
 const edit=(req,res,err)=>{
-        let accountData=req.body.data
+        let accountData=req.body.data;
+        db.update("users",accountData,"email="+req.user.email).then(data=>{
+        res.json({success:true,user:data})
+            }).catch((error)=>{
+                    console.log(error)
+            })
 
 }
 const remove=(req,res,err)=>{
