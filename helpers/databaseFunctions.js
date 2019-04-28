@@ -15,7 +15,14 @@ condition =>
 for example (id=5) or 1 to select without conditions
 
 */
-const select=(coulmnName,tableName,condition)=>(
+
+
+/*
+@args Coulmn Name , Table name , condition
+@desc find By * or by Condition
+@return Promise with data
+*/
+const find=(coulmnName,tableName,condition)=>(
 
     new Promise((resolve,reject)=>{
              let conColVal=condition.split("=")
@@ -32,8 +39,12 @@ const select=(coulmnName,tableName,condition)=>(
     })
 )
     
-
-const insert=(tableName,coulmns,values)=>(
+/*
+@args Coulmn Name , Table name , values
+@desc create new record
+@return Promise with data
+*/
+const create=(tableName,coulmns,values)=>(
   
     new Promise((resolve,reject)=>{
           let mappedCoulmns="(";
@@ -70,6 +81,13 @@ const insert=(tableName,coulmns,values)=>(
     });
     })
 )
+
+/*
+@args new Data , Table name , condition
+@desc update recored
+@return Promise with data
+*/
+
 const update=(tableName,newData,condition)=>(
  new Promise((resolve,reject)=>{
       let conColVal=condition.split("=")
@@ -93,10 +111,59 @@ const update=(tableName,newData,condition)=>(
     });
     })
 )
+/*
+@args table one  , Table two , shared coulmn
+@desc update recored
+@return Promise with data
+*/
+
+const innerJoin=(tableOne,tabelTwo,coulmnName)=>{
+    new Promise((resolve,reject)=>{
+        
+       var query=`SELECT *
+FROM ${tableOne}
+INNER JOIN ${tableTwo}
+ON tableOne.${coulmnName}= tableTwo.${coulmnName}`
+        connection.query(query, function (error, results, fields) {
+        if (error) {
+            reject(error)
+        }
+        else{
+            resolve(results)
+        }
+        
+    });
+    })
+}
+
+/*
+@args table name and condition
+@desc delete record
+@return Promise with data
+*/
+
+const destroy=(tableName,condition)=>(
+
+    new Promise((resolve,reject)=>{
+             let conColVal=condition.split("=")
+        var query = `DELETE FROM ${tableName} WHERE ${condition.length==0?"":conColVal[0]+"='"+conColVal[1]+"'"}`;
+        connection.query(query, function (error, results, fields) {
+        if (error) {
+            reject(error)
+        }
+        else{
+            resolve(results)
+        }
+        
+    });
+    })
+)
 
 module.exports={
-    insert,
-    select,
-    update
+    create,
+    find,
+    update,
+    innerJoin,
+    destroy
 
 }
