@@ -1,6 +1,5 @@
 # airbot
-Website for ariplane Reservation with bot connected to facebook page to send you last offers
-Using :
+Website for airplane Reservation with a bot connected to Facebook page to send you last Using :
 Reactjs
 Nodejs
 Facebook APIs
